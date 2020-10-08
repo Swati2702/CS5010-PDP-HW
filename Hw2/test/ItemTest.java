@@ -1,6 +1,14 @@
 import org.junit.Before;
 import org.junit.Test;
+
+import item.FootWear;
+import item.HandGear;
+import item.HeadGear;
+import item.Item;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  *Tests for items/gears.
@@ -23,7 +31,7 @@ public class ItemTest {
   @Test
   public void testConstructorHeadGearSuccess() {
     headGear = new HeadGear("Sleepy", "Hat", 10);
-    assertEquals(" HeadGear : \t( Name: Sleepy Hat, Attack power = 0, "
+    assertEquals(" item.HeadGear : \t( Name: Sleepy Hat, Attack power = 0, "
             + "Defense Strength =  10 )", headGear.toString());
   }
 
@@ -80,7 +88,7 @@ public class ItemTest {
 
   @Test
   public void testGetIsCombined() {
-    assertEquals(false, headGear.isCombined());
+    assertFalse(headGear.isCombined());
   }
 
 
@@ -88,7 +96,7 @@ public class ItemTest {
   @Test
   public void testConstructorHandGearSuccess() {
     handGear = new HandGear("Sharp", "Shield", 6);
-    assertEquals(" HandGear : \t( Name: Sharp Shield, Attack power = 6, "
+    assertEquals(" item.HandGear : \t( Name: Sharp Shield, Attack power = 6, "
             + "Defense Strength =  0 )", handGear.toString());
   }
 
@@ -145,7 +153,7 @@ public class ItemTest {
 
   @Test
   public void testGetIsCombinedHandGear() {
-    assertEquals(false, handGear.isCombined());
+    assertFalse(handGear.isCombined());
   }
 
 
@@ -155,7 +163,7 @@ public class ItemTest {
   @Test
   public void testConstructorFootWearSuccess() {
     footWear = new FootWear("Seething", "Sandals", 8, "Attack");
-    assertEquals(" FootWear : \t( Name: Seething Sandals, Attack power = 8, "
+    assertEquals(" item.FootWear : \t( Name: Seething Sandals, Attack power = 8, "
             + "Defense Strength =  0 )", footWear.toString());
   }
 
@@ -219,7 +227,7 @@ public class ItemTest {
 
   @Test
   public void testGetIsCombinedFootWear() {
-    assertEquals(false, footWear.isCombined());
+    assertFalse(footWear.isCombined());
   }
 
   /* ------------------ test combine items---------------- */
@@ -228,21 +236,21 @@ public class ItemTest {
   public void testCombineHeadGearSuccess() {
     Item headGear2 = new HeadGear("Hot", "Helmet", 10);
     Item item = headGear2.getCombinedItem(headGear);
-    assertEquals(" HeadGear : \t( Name: Hot, Sleepy Hat, Attack power = 0, "
+    assertEquals(" item.HeadGear : \t( Name: Hot, Sleepy Hat, Attack power = 0, "
             +"Defense Strength =  20 )", item.toString());
   }
 
   @Test
   public void testCombineHandGearSuccess() {
     Item handGear2 = new HandGear("Spicy", "Shield", 2);
-    assertEquals(" HandGear : \t( Name: Lovely, Spicy Shield, Attack power = 7, "
+    assertEquals(" item.HandGear : \t( Name: Lovely, Spicy Shield, Attack power = 7, "
             +"Defense Strength =  0 )", handGear.getCombinedItem(handGear2).toString());
   }
 
   @Test
   public void testCombineFootWearSuccess() {
     Item footWear2 = new FootWear("Sexy", "Shoes", 2, "defense");
-    assertEquals(" FootWear : \t( Name: Slippery, Sexy Shoes, Attack power = 10, "
+    assertEquals(" item.FootWear : \t( Name: Slippery, Sexy Shoes, Attack power = 10, "
             +"Defense Strength =  2 )", footWear.getCombinedItem(footWear2).toString());
   }
 
@@ -281,7 +289,14 @@ public class ItemTest {
   public void testGetIsCombinedForCombinedItem() {
     Item headGear2 = new HeadGear("Hot", "Helmet", 10);
     Item item = headGear2.getCombinedItem(headGear);
-    assertEquals(true, item.isCombined());
+    assertTrue(item.isCombined());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testIsCombinedFailsForAlreadyCombinedItem() {
+    Item headGear2 = new HeadGear("Hot", "Helmet", 10);
+    Item item = headGear2.getCombinedItem(headGear);
+    item.getCombinedItem(headGear2);
   }
 
 }

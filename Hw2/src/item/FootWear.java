@@ -1,3 +1,5 @@
+package item;
+
 /**
  * Represents a FootWear. A non combined FootWear has only defense Strength or attack power.
  * But a combined footwear can have both.

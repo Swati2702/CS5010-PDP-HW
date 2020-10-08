@@ -1,3 +1,5 @@
+package item;
+
 /**
  * Represents a Hand gear. A hand gear has only attack Strength.
  * */

@@ -1,3 +1,5 @@
+package item;
+
 /**
  * Represents a Headgear. A headgear has only defense Strength.
  * */

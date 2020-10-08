@@ -1,11 +1,14 @@
+package item;
+
 /**
  * This interface defines a gear/item and its associated methods.
  * */
 
-public interface Item {
+public interface Item extends Comparable<Item> {
 
-  final String ATTACK = "Attack";
-  final String DEFENSE = "Defense";
+  String ATTACK = "Attack";
+  String DEFENSE = "Defense";
+
   /**
    * Gets the name of the item.
    * */
