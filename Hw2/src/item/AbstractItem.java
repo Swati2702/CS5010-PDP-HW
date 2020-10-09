@@ -162,7 +162,9 @@ public abstract class AbstractItem implements Item, Comparable<Item> {
     else if (that.getAttackPower() != this.getAttackPower()) {
       return that.getAttackPower() - this.getAttackPower();
     }
-    else return that.getDefenseStrength() - this.getDefenseStrength();
+    else {
+      return that.getDefenseStrength() - this.getDefenseStrength();
+    }
 
   }
 

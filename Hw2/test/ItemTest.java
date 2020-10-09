@@ -237,21 +237,21 @@ public class ItemTest {
     Item headGear2 = new HeadGear("Hot", "Helmet", 10);
     Item item = headGear2.getCombinedItem(headGear);
     assertEquals(" item.HeadGear : \t( Name: Hot, Sleepy Hat, Attack power = 0, "
-            +"Defense Strength =  20 )", item.toString());
+            + "Defense Strength =  20 )", item.toString());
   }
 
   @Test
   public void testCombineHandGearSuccess() {
     Item handGear2 = new HandGear("Spicy", "Shield", 2);
     assertEquals(" item.HandGear : \t( Name: Lovely, Spicy Shield, Attack power = 7, "
-            +"Defense Strength =  0 )", handGear.getCombinedItem(handGear2).toString());
+            + "Defense Strength =  0 )", handGear.getCombinedItem(handGear2).toString());
   }
 
   @Test
   public void testCombineFootWearSuccess() {
     Item footWear2 = new FootWear("Sexy", "Shoes", 2, "defense");
     assertEquals(" item.FootWear : \t( Name: Slippery, Sexy Shoes, Attack power = 10, "
-            +"Defense Strength =  2 )", footWear.getCombinedItem(footWear2).toString());
+            + "Defense Strength =  2 )", footWear.getCombinedItem(footWear2).toString());
   }
 
   @Test(expected = IllegalArgumentException.class)

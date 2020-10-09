@@ -54,7 +54,7 @@ public interface CharacterInterface {
    * @return Character with item combined
    * @throws IllegalArgumentException if cannot add that item to character
    * */
-  Character addItemAndCombine(Item new_item, Item old_item) throws IllegalArgumentException;
+  Character addItemAndCombine(Item newItem, Item oldItem) throws IllegalArgumentException;
 
   /** Removes item to  the list of gears worn by the character.
    * @return Character with item removed

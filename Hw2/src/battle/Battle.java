@@ -21,10 +21,11 @@ public class Battle implements BattleInterface {
 
   /**
    * Constructor for battle class.
+   *
    * @param character1 : character 1 of the battle
    * @param character2 : character 2 of the battle
    * @throws IllegalArgumentException : if number of items is not equal to 10
-   * */
+   */
   public Battle(Character character1, Character character2, List<Item> itemList) {
     if (itemList.size() != 10) {
       throw new IllegalArgumentException(" Item list size should be 10.");
@@ -50,9 +51,12 @@ public class Battle implements BattleInterface {
     Collections.sort(itemList);
     double random = Math.random();
     int chosenCharacter;
-    if (random < 0.5)
+    if (random < 0.5) {
       chosenCharacter = 0;
-    else chosenCharacter = 1;
+    }
+    else {
+      chosenCharacter = 1;
+    }
 
     Character[] characters = new Character[2];
     characters[0] = character1;
@@ -63,9 +67,9 @@ public class Battle implements BattleInterface {
     while (itemList.size() > 0 && trials < 30) {
       boolean combined = false;
 
-      for (Item item: itemList) {
+      for (Item item : itemList) {
         Item toBeCombinedItem = characters[chosenCharacter].canCombineItem(item);
-        if (null != toBeCombinedItem ) {
+        if (null != toBeCombinedItem) {
           characters[chosenCharacter].addItemAndCombine(item, toBeCombinedItem);
           itemList.remove(item);
           combined = true;
@@ -74,20 +78,19 @@ public class Battle implements BattleInterface {
       }
 
       if (!combined) {
-        for ( Item item: itemList) {
-
+        for (Item item : itemList) {
           try {
             characters[chosenCharacter].addItem(item);
             itemList.remove(item);
             break;
           } catch (Exception ignored) {
+
           }
         }
       }
       chosenCharacter = 1 - chosenCharacter; //flip character turn
       trials++;
     }
-
   }
 
 
@@ -100,4 +103,10 @@ public class Battle implements BattleInterface {
 
   }
 
+  @Override
+  public String toString() {
+    return String.format(" Character 1: %s,  Character 2: %s, Itemlist: %s ",
+            character1.toString(), character2.toString(), itemList.toString() );
   }
+
+}

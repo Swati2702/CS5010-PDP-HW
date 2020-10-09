@@ -7,6 +7,7 @@ import item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -120,12 +121,12 @@ public class Character implements CharacterInterface {
   }
 
   @Override
-  public Character addItemAndCombine(Item new_item, Item old_item) throws IllegalArgumentException {
-    if (old_item.isCombined()) {
+  public Character addItemAndCombine(Item newItem, Item oldItem) throws IllegalArgumentException {
+    if (oldItem.isCombined()) {
       throw new IllegalArgumentException("Cannot combine with a combined item.");
     }
-    this.itemList.remove(old_item);
-    this.itemList.add(old_item.getCombinedItem(new_item));
+    this.itemList.remove(oldItem);
+    this.itemList.add(oldItem.getCombinedItem(newItem));
     return this;
   }
 
@@ -138,8 +139,7 @@ public class Character implements CharacterInterface {
       try {
         item.getCombinedItem(newItem);
         return item;
-      } catch (Exception e) {
-        //System.out.println("No successful item combination found yet.");
+      } catch (Exception ignored) {
       }
     }
     return null;
@@ -176,6 +176,11 @@ public class Character implements CharacterInterface {
     Character that = (Character) o;
 
     return (this.getCharacterID() == that.getCharacterID()) ;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(characterID, defaultAttackPower, defaultDefenseStrength, itemList);
   }
 }
 

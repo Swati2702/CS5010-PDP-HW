@@ -10,7 +10,7 @@ import battle.Character;
 import static org.junit.Assert.assertEquals;
 
 /**
- *Tests for Character.
+ *Tests for Character class.
  */
 
 public class CharacterTest {
@@ -83,7 +83,7 @@ public class CharacterTest {
 
   @Test (expected = IllegalArgumentException.class)
   public void testRemoveItemListFailsIfItemNotPresent() {
-    Item headGear = new HeadGear("Sleepy", "Hat", 10);;
+    Item headGear = new HeadGear("Sleepy", "Hat", 10);
     character.removeItem(headGear);
   }
 

@@ -28,6 +28,7 @@ public interface BattleInterface {
    * */
   void dressCharacters();
 
+
   /** Returns the character who won the battle.
    *  The winner is determined by who has less damage after a
    * battle. Damage is calculated by one's opponent's attack power minus
