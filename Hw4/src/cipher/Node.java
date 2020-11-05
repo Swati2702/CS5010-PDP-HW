@@ -1,7 +1,10 @@
-package decoder;
+package cipher;
 
 import java.util.Map;
 
+/**
+ * Package private interface.
+ * */
 interface Node {
 
 

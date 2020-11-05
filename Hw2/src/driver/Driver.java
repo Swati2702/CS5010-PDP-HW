@@ -35,8 +35,6 @@ public class Driver {
       battle.run2();
     }
 
-
-
   }
 
   void run1() {

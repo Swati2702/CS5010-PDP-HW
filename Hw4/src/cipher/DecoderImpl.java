@@ -1,22 +1,24 @@
-package decoder;
+package cipher;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+
 /**
- * .
+ * Package private class.
  * */
-public class DecoderImpl implements Decoder {
+
+class DecoderImpl implements Decoder {
 
   private final Node root;
 
   private final Set<Character> symbols;
 
-  private final Map<Character, String> symbolCodeMap;
+    private final Map<Character, String> symbolCodeMap;
 
-  public DecoderImpl(String symbols) throws IllegalArgumentException {
+  DecoderImpl(String symbols) throws IllegalArgumentException {
     if (null == symbols || symbols.isBlank() || symbols.isEmpty()) {
       throw new IllegalArgumentException("Coding symbols cannot be null or empty");
     }
@@ -105,7 +107,6 @@ public class DecoderImpl implements Decoder {
         throw new IllegalStateException("Unable to decode message.");
       }
     }
-
     return decodedMessage.toString();
   }
 

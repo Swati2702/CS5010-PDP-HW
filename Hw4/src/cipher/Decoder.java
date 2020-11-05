@@ -1,7 +1,9 @@
-package decoder;
+package cipher;
 
-public interface Decoder {
-
+/**
+ * Package private interface.
+ * */
+interface Decoder {
 
   void addSymbolToTree(char characterToEncode, String encoding)
           throws IllegalStateException, IllegalArgumentException;

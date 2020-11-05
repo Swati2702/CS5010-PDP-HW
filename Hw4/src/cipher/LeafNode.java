@@ -1,20 +1,25 @@
-package decoder;
+package cipher;
 
 import java.util.HashMap;
 import java.util.Map;
 
-class NonLeafNode implements Node {
+/**
+ * Package private class.
+ * */
+class LeafNode implements Node {
 
+  private  final char decodedCharacter;
   private final Map<Character, Node> subTree;
 
-  NonLeafNode() {
+  LeafNode(char symbol) {
+    this.decodedCharacter = symbol;
     this.subTree = new HashMap<>();
   }
 
+
   @Override
   public void addNode(char symbol, Node node) {
-    this.subTree.put(symbol, node);
-
+    throw new IllegalStateException("Invalid operation -  adding new node to leaf node.");
   }
 
   @Override
@@ -24,11 +29,11 @@ class NonLeafNode implements Node {
 
   @Override
   public char getDecodedCharacter() throws IllegalStateException {
-    throw new IllegalStateException("Non leaf node does not contain decoded character.");
+    return decodedCharacter;
   }
 
   @Override
   public NodeType getNodeType() {
-    return NodeType.NONLEAFNODE;
+    return NodeType.LEAFNODE;
   }
 }
