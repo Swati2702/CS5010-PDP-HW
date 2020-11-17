@@ -1,12 +1,14 @@
-package maze;
+package model.maze;
 
 import com.sun.tools.javac.util.Pair;
 
 import java.util.EnumSet;
 import java.util.Map;
 
-import algo.Direction;
-import algo.NodeType;
+import model.algo.Direction;
+import model.algo.NodeType;
+
+
 
 
 /**
@@ -19,10 +21,6 @@ import algo.NodeType;
  * */
 public interface Maze {
 
-  int GOLDCOUNTPERROOM = 1;
-  double THIEFLOSSFACTOR = 0.1;
-  double GOLDLOCATIONPERCENTAGE = 20.0;
-  double THIEFLOCATIONPERCENTAGE = 10.0;
 
   /**
    * Gets number of rows in the maze.
@@ -47,6 +45,18 @@ public interface Maze {
    * @return  number of remaining walls in the maze.
    * */
   int getNumberOfRemainingWalls();
+
+  /**
+   * Gets number of bottomless pits in the maze.
+   * @return  number of  bottomless pits in the maze.
+   * */
+  int getNumberOfPits();
+
+  /**
+   * Gets number of Superbats in the maze.
+   * @return  number of  Superbats in the maze.
+   * */
+  int getNumberOfBats();
 
   /**
    * Get the current moves of the player.
@@ -80,21 +90,30 @@ public interface Maze {
 
   /**
    * Make a particular specified move for the player.
+   * @param direction : the direction in which the move is to be made
    * @throws IllegalArgumentException if cannot make move in given direction
    * */
   void makeMove(Direction direction) throws IllegalArgumentException;
 
+  /**
+   * Method to shoot an arrow in the given direction.
+   * @param direction : the direction in which the arrow is to be shot
+   * @param distance : the number of caves the arrow will traverse (limit 5)
+   * @throws IllegalArgumentException if arrows exhausted or distance illegal
+   * */
+  void shootArrow(Direction direction, int distance) throws IllegalArgumentException;
+
 
   /**
-   * Specify the starting point of the maze.
-   * @throws IllegalArgumentException if start point is invalid
+   * Method to visualize the maze.
    * */
-  void setStartingPoint(int row, int column) throws IllegalArgumentException;
+  void visualize();
 
   /**
-   * specify the goal location of the maze.
-   * @throws IllegalArgumentException if goal point is same as starting point or point is invalid
+   * Method to set seed for random maze generation.
    * */
-  void setGoalPoint(int row, int column) throws IllegalArgumentException;
+  void setSeed(int seed);
+
+
 
 }
