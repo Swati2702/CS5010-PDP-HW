@@ -13,7 +13,6 @@ import model.algo.ModifiedKruskal;
 import model.algo.NodeType;
 
 
-
 /**
  * Abstract maze class to be extended by all kinds of mazes.
  * Implements maze interface.
@@ -29,7 +28,7 @@ public class AbstractMaze implements Maze {
   protected final Player player;
   protected final double pitPercent;
   protected final double batPercent;
-  private final Random generator = new Random(32);
+  protected final Random generator = new Random(32);
 
 
   /**
@@ -132,10 +131,6 @@ public class AbstractMaze implements Maze {
     return numberOfColumns;
   }
 
-  @Override
-  public boolean isWrapped() {
-    return isWrapped;
-  }
 
   @Override
   public int getNumberOfRemainingWalls() {
@@ -219,7 +214,8 @@ public class AbstractMaze implements Maze {
   }
 
   @Override
-  public void makeMove(Direction direction) throws IllegalArgumentException {
+  //Changed this method to accommodate the new requirements now.
+  public String makeMove(Direction direction) throws IllegalArgumentException {
 
     if (!getPossibleMoves().contains(direction)) {
       throw new IllegalArgumentException("Invalid move.");
@@ -238,8 +234,9 @@ public class AbstractMaze implements Maze {
       }
     }
     else {
-      setFinalLocation(newLocation);
+      return setFinalLocation(newLocation);
     }
+    return "";
   }
 
   private Pair<Integer, Integer>  getActualLocation(Pair<Integer, Integer> currentLocation,
@@ -262,13 +259,15 @@ public class AbstractMaze implements Maze {
     return newLocation;
   }
 
-  private void setFinalLocation(Pair<Integer, Integer> startPoint) {
+  private String setFinalLocation(Pair<Integer, Integer> startPoint) {
     Map<Pair<Integer, Integer>, NodeType> nodeTypeMap = mazeGraph.getNodeTypeList();
     NodeType nodeType = nodeTypeMap.get(startPoint);
+    StringBuilder msg = new StringBuilder();
 
     switch (nodeType) {
       case PIT:
         //If pit is found, player dies
+        msg.append("You fall into a pit and die. Better luck next time!");
         player.setStatus(PlayerStatus.DEAD);
         player.setCurrentLocation(startPoint);
         break;
@@ -276,7 +275,7 @@ public class AbstractMaze implements Maze {
       case BAT:
         //transport by bat 50% of the time
         if (Math.random() < 0.5) {
-          System.out.println("Snatch -- you are grabbed by superbats and ...");
+          msg.append("Snatch -- you are grabbed by superbats and ...");
           //transport
           int r = generator.nextInt(numberOfRows);
           int c = generator.nextInt(numberOfColumns);
@@ -289,7 +288,7 @@ public class AbstractMaze implements Maze {
           setFinalLocation(newLocation);
         }
         else {
-          System.out.println("Whoa -- you successfully duck superbats that try to grab you");
+          msg.append("Whoa -- you successfully duck superbats that try to grab you ");
           //land in the cave
           player.setCurrentLocation(startPoint);
         }
@@ -297,8 +296,8 @@ public class AbstractMaze implements Maze {
       default:
         // If transported point has wumpus
         if (startPoint.equals(getGoalPoint())) {
-          System.out.println("Chomp, chomp, chomp, thanks for feeding the Wumpus!");
-          System.out.println("Better luck next time");
+          msg.append("Chomp, chomp, chomp, thanks for feeding the Wumpus!\n");
+          msg.append("Better luck next time");
           player.setStatus(PlayerStatus.DEAD);
         }
         player.setCurrentLocation(startPoint);
@@ -309,13 +308,14 @@ public class AbstractMaze implements Maze {
       for (Direction move: moves) {
         Pair<Integer, Integer> loc = getActualLocation(player.getCurrentLocation(), move);
         if (nodeTypeMap.get(loc) == NodeType.PIT) {
-          System.out.println("You feel a draft");
+          msg.append("You feel a draft ");
         }
         else if (loc.equals(getGoalPoint())) {
-          System.out.println("You smell a Wumpus!");
+          msg.append("You smell a Wumpus! ");
         }
       }
     }
+    return msg.toString();
   }
 
 
@@ -334,7 +334,7 @@ public class AbstractMaze implements Maze {
   }
 
   @Override
-  public void shootArrow(Direction direction, int distance) throws IllegalArgumentException,
+  public String shootArrow(Direction direction, int distance) throws IllegalArgumentException,
           IllegalStateException {
     if (distance < 0 || player.getArrowCount() == 0) {
       throw new IllegalArgumentException("Invalid arguments.");
@@ -344,23 +344,29 @@ public class AbstractMaze implements Maze {
       if (player.getArrowCount() == 0) {
         player.setStatus(PlayerStatus.DEAD);
       }
-      return;
+      return "";
     }
-    shootArrowHelper(direction, distance, player.getCurrentLocation());
+    return shootArrowHelper(direction, distance, player.getCurrentLocation());
+
   }
 
 
-  void shootArrowHelper(Direction direction, int distance, Pair<Integer, Integer> currentLocation) {
+  private String shootArrowHelper(Direction direction, int distance,
+                                   Pair<Integer, Integer> currentLocation) {
+    StringBuilder msg = new StringBuilder();
     if (distance == 0 && getGoalPoint().equals(currentLocation)) {
-      System.out.println("Hee hee hee, you got the wumpus!");
-      System.out.println("Next time you won't be so lucky");
+      msg.append("Hee hee hee, you got the wumpus!\n");
+      msg.append("Next time you won't be so lucky");
       player.setStatus(PlayerStatus.WINNER);
       player.decreaseArrowCount();
-      return;
+      return msg.toString();
     }
     if (distance == 0 || !getPossibleMoves().contains(direction)) {
       player.decreaseArrowCount();
-      return;
+      if (player.getArrowCount() == 0) {
+        player.setStatus(PlayerStatus.DEAD);
+      }
+      return "";
     }
 
     Pair<Integer, Integer> newLocation = makeMoveHelper(currentLocation, direction);
@@ -369,19 +375,20 @@ public class AbstractMaze implements Maze {
       EnumSet<Direction> moves =  mazeGraph.getPossibleMoves(newLocation);
       for (Direction move : moves) {
         if (!move.equals(directionComplement.get(direction))) {
-          shootArrowHelper(move, distance, newLocation);
+          return shootArrowHelper(move, distance, newLocation);
         }
       }
     }
     else {
       distance--;
-      shootArrowHelper(direction, distance, newLocation);
+      return shootArrowHelper(direction, distance, newLocation);
     }
-
+    return "";
   }
 
   @Override
-  public void visualize() {
+  public String visualize() {
+    StringBuilder visualization = new StringBuilder();
     for (int i = 0; i < numberOfRows; i++) {
       for (int j = 0; j < numberOfColumns; j++) {
 
@@ -390,28 +397,31 @@ public class AbstractMaze implements Maze {
           case PIT:
           case BAT:
             if (getGoalPoint().equals(new Pair<>(i, j))) {
-              System.out.print("WUMPUS ");
+              visualization.append("WUMPUS ");
             }
             else {
-              System.out.print(nodeType + " ");
+              visualization.append(nodeType).append(" ");
             }
 
             break;
           case BLANK:
             if (mazeGraph.getMazeGraphAdjacencyList().get(new Pair<>(i, j)).size() == 2) {
-              System.out.print("TUNNEL ");
+              visualization.append("TUNNEL ");
             } else {
               if (getGoalPoint().equals(new Pair<>(i, j))) {
-                System.out.print("WUMPUS ");
+                visualization.append("WUMPUS ");
               }
               else {
-                System.out.print("CAVE ");
+                visualization.append("CAVE ");
               }
             }
+            break;
+          default: throw new IllegalStateException("Illegal state.");
         }
       }
-      System.out.println();
+      visualization.append("\n");
     }
+    return visualization.toString();
   }
 
   @Override

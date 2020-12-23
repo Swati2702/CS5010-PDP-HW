@@ -4,6 +4,7 @@ import cipher.CipherImpl;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -35,7 +36,6 @@ public class Driver {
         break;
       default: System.out.println("Invalid argument.");
     }
-    driver.run3();
 
   }
 
@@ -47,7 +47,10 @@ public class Driver {
     System.out.println("Enter message which will be used for creating binary huffman "
                 + "encoding.");
     String msg = scanner.nextLine();
-    Cipher cipher = new CipherImpl(msg, "01");
+    System.out.println("Enter symbols which will be used for creating binary huffman "
+            + "encoding.");
+    String symbols = scanner.nextLine();
+    Cipher cipher = new CipherImpl(msg, symbols);
     System.out.println("The coding scheme generated is:");
     Map<Character, String> codingScheme =  cipher.getCodingScheme();
     for (Character ch: codingScheme.keySet()) {
@@ -55,15 +58,24 @@ public class Driver {
     }
     System.out.println("Enter message you want to encode using this coding scheme.");
     msg = scanner.nextLine();
-    System.out.println("The encoded message is " + cipher.encodeMessage(msg));
+    try {
+      System.out.println("The encoded message is " + cipher.encodeMessage(msg));
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
 
     System.out.println("Enter message you want to decode using this coding scheme.");
     msg = scanner.nextLine();
-    System.out.println("The decoded message is " + cipher.decodeMessage(msg));
+    try {
+      System.out.println("The decoded message is " + cipher.decodeMessage(msg));
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+
   }
 
   void run2() throws FileNotFoundException {
-    scanner = new Scanner(new FileInputStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\baseMessage.txt"));
+    scanner = new Scanner(new FileInputStream("baseMessage.txt"));
     StringBuilder msg = new StringBuilder();
     while (scanner.hasNextLine()) {
       msg.append(scanner.nextLine());
@@ -71,32 +83,43 @@ public class Driver {
 
     Cipher cipher = new CipherImpl(msg.toString(), "01");
     Map<Character, String> codingScheme =  cipher.getCodingScheme();
-    System.setOut(new PrintStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\encodingSchemeRun2.txt"));
+    System.setOut(new PrintStream("encodingSchemeRun2.txt"));
     for (Character ch: codingScheme.keySet()) {
       System.out.println(ch + ":" + codingScheme.get(ch));
     }
 
-    scanner = new Scanner(new FileInputStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\MessageToEncodeRun2.txt"));
+    scanner = new Scanner(new FileInputStream("MessageToEncodeRun2.txt"));
     StringBuilder msg2 = new StringBuilder();
     while (scanner.hasNextLine()) {
       msg2.append(scanner.nextLine());
     }
 
-    System.setOut(new PrintStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\encodedMessageRun2.txt"));
-    System.out.println(cipher.encodeMessage(msg2.toString()));
+    System.setOut(new PrintStream("encodedMessageRun2.txt"));
+    try {
+      System.out.println(cipher.encodeMessage(msg2.toString()));
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
 
-    scanner = new Scanner(new FileInputStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\MessageToDecodeRun2.txt"));
+
+    scanner = new Scanner(new FileInputStream("MessageToDecodeRun2.txt"));
     StringBuilder msg3 = new StringBuilder();
     while (scanner.hasNextLine()) {
       msg3.append(scanner.nextLine());
     }
 
-    System.setOut(new PrintStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\decodedMessageRun2.txt"));
-    System.out.println(cipher.decodeMessage(msg3.toString()));
+    System.setOut(new PrintStream("decodedMessageRun2.txt"));
+
+    try {
+      System.out.println(cipher.decodeMessage(msg3.toString()));
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+
   }
 
   void run3() throws FileNotFoundException {
-    scanner = new Scanner(new FileInputStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\baseMessage.txt"));
+    scanner = new Scanner(new FileInputStream("baseMessage.txt"));
     StringBuilder msg = new StringBuilder();
     while (scanner.hasNextLine()) {
       msg.append(scanner.nextLine());
@@ -104,61 +127,79 @@ public class Driver {
 
     Cipher cipher = new CipherImpl(msg.toString(), "0123456789abcdef");
     Map<Character, String> codingScheme =  cipher.getCodingScheme();
-    System.setOut(new PrintStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\encodingSchemeRun3.txt"));
+    System.setOut(new PrintStream("encodingSchemeRun3.txt"));
     for (Character ch: codingScheme.keySet()) {
       System.out.println(ch + ":" + codingScheme.get(ch));
     }
 
-    scanner = new Scanner(new FileInputStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\MessageToEncodeRun3.txt"));
+    scanner = new Scanner(new FileInputStream("MessageToEncodeRun3.txt"));
     StringBuilder msg2 = new StringBuilder();
     while (scanner.hasNextLine()) {
       msg2.append(scanner.nextLine());
     }
 
-    System.setOut(new PrintStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\encodedMessageRun3.txt"));
-    System.out.println(cipher.encodeMessage(msg2.toString()));
+    System.setOut(new PrintStream("encodedMessageRun3.txt"));
+    try {
+      System.out.println(cipher.encodeMessage(msg2.toString()));
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
 
-    scanner = new Scanner(new FileInputStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\MessageToDecodeRun3.txt"));
+
+    scanner = new Scanner(new FileInputStream("MessageToDecodeRun3.txt"));
     StringBuilder msg3 = new StringBuilder();
     while (scanner.hasNextLine()) {
       msg3.append(scanner.nextLine());
     }
 
-    System.setOut(new PrintStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\decodedMessageRun3.txt"));
-    System.out.println(cipher.decodeMessage(msg3.toString()));
+    System.setOut(new PrintStream("decodedMessageRun3.txt"));
+    try {
+      System.out.println(cipher.decodeMessage(msg3.toString()));
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+
   }
 
   void run4() throws FileNotFoundException {
-    scanner = new Scanner(new FileInputStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\encodingSchemeRun4.txt"));
-    StringBuilder msg = new StringBuilder();
-    while (scanner.hasNextLine()) {
-      msg.append(scanner.nextLine());
+    scanner = new Scanner(new FileInputStream("encodingSchemeRun4.txt"));
+
+    Map<Character, String> symbolCodeDictionary = new HashMap<>();
+    while (scanner.hasNext()) {
+      String line = scanner.nextLine();
+      char ch = line.charAt(0);
+      String encoding = line.substring(2);
+      symbolCodeDictionary.put(ch, encoding);
     }
 
-    Cipher cipher = new CipherImpl(msg.toString(), "0123456789abcdef");
-    Map<Character, String> codingScheme =  cipher.getCodingScheme();
-    System.setOut(new PrintStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\encodingSchemeRun3.txt"));
-    for (Character ch: codingScheme.keySet()) {
-      System.out.println(ch + ":" + codingScheme.get(ch));
-    }
+    Cipher cipher = new CipherImpl(symbolCodeDictionary);
 
-    scanner = new Scanner(new FileInputStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\MessageToEncodeRun3.txt"));
+    scanner = new Scanner(new FileInputStream("MessageToEncodeRun4.txt"));
     StringBuilder msg2 = new StringBuilder();
     while (scanner.hasNextLine()) {
       msg2.append(scanner.nextLine());
     }
 
-    System.setOut(new PrintStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\encodedMessageRun3.txt"));
-    System.out.println(cipher.encodeMessage(msg2.toString()));
+    System.setOut(new PrintStream("encodedMessageRun4.txt"));
+    try {
+      System.out.println(cipher.encodeMessage(msg2.toString()));
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
 
-    scanner = new Scanner(new FileInputStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\MessageToDecodeRun3.txt"));
+
+    scanner = new Scanner(new FileInputStream("MessageToDecodeRun4.txt"));
     StringBuilder msg3 = new StringBuilder();
     while (scanner.hasNextLine()) {
       msg3.append(scanner.nextLine());
     }
 
-    System.setOut(new PrintStream("E:\\CS 5010\\CS5010-PDP-HW\\Hw4\\src\\decodedMessageRun3.txt"));
-    System.out.println(cipher.decodeMessage(msg3.toString()));
+    System.setOut(new PrintStream("decodedMessageRun4.txt"));
+    try {
+      System.out.println(cipher.decodeMessage(msg3.toString()));
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
 

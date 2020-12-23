@@ -6,7 +6,7 @@ import org.junit.Test;
 import model.algo.Direction;
 import model.algo.NodeType;
 import model.maze.AbstractMaze;
-import model.maze.Player;
+import model.maze.PlayerStatus;
 import model.maze.RoomMaze;
 
 import static org.junit.Assert.assertEquals;
@@ -21,14 +21,16 @@ public class RoomMazeTest {
 
   @Before
   public void setMazeGraph() {
-    roomMaze = new RoomMaze(2,3, 1, 1, 1,
+    roomMaze = new RoomMaze(2,3, 1,
+            1, 1,
             0,2, 20, 10, 3 );
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testRoomMazeGraphConstructionThrowsExceptionRows() {
 
-    roomMaze = new RoomMaze(-1,3, 1,0, 0,
+    roomMaze = new RoomMaze(-1,3, 1,
+            0, 0,
             0,2, 20, 10, 3 );
   }
 
@@ -50,13 +52,13 @@ public class RoomMazeTest {
             0,2, 20, 10, 3 );
   }
 
-  //----------------------------------------------------new
 
   @Test(expected = IllegalArgumentException.class)
   public void testRoomMazeGraphConstructionThrowsExceptionPitPercent() {
     roomMaze = new RoomMaze(2,3, 1, 0, 0,
             0,2, 101, 10, 3 );
   }
+
   @Test(expected = IllegalArgumentException.class)
   public void testRoomMazeGraphConstructionThrowsExceptionPitPercent2() {
     roomMaze = new RoomMaze(2,3, 1, 0, 0,
@@ -149,11 +151,6 @@ public class RoomMazeTest {
             0,0, 20, 10, 3 );
   }
 
-
-
-//-----------------------end
-
-
   @Test
   public void testRoomMazeGraphConstruction() {
     assertEquals("AbstractMaze{numberOfRows=2, numberOfColumns=3, isWrapped=false, "
@@ -163,7 +160,6 @@ public class RoomMazeTest {
             + "startingPoint=Pair[1,1], goalPoint=Pair[0,2], pitPercent=20.0, batPercent=10.0}",
             roomMaze.toString());
   }
-
 
   @Test
   public void testGetNumberOfRowsRoomMaze() {
@@ -175,11 +171,6 @@ public class RoomMazeTest {
     assertEquals(3, roomMaze.getNumberOfColumns());
   }
 
-
-  @Test
-  public void testisWrappedRoomMaze() {
-    assertEquals(false, roomMaze.isWrapped());
-  }
 
   @Test
   public void testGetNumberOfRemainingWallsRoomMaze() {
@@ -235,69 +226,26 @@ public class RoomMazeTest {
 
   @Test
   public void testGetCurrentLocationOfPLayer() {
-    Player player = roomMaze.getPlayer();
-    assertEquals("Pair[0,0]", player.getCurrentLocation().toString());
-    roomMaze.makeMove(Direction.EAST);
-    assertEquals("Pair[1,1]", player.getCurrentLocation().toString());
+    assertEquals("Pair[1,1]", roomMaze.getPlayer().getCurrentLocation().toString());
   }
 
 
-
-//
-//  @Test
-//  public void testGetArrowCountOfPLayer() {
-//    Player player = roomMaze.getPlayer();
-//    assertEquals(3, player.getArrowCount());
-//    roomMaze.makeMove(Direction.EAST);
-//    assertEquals(0, player.getArrowCount());
-//  }
-
-  @Test
-  public void testGetArrowCountOfPlayerAfterShooting() {
-    Player player = roomMaze.getPlayer();
-    assertEquals(0, player.getArrowCount());
-    assertEquals("GOLD",
-            roomMaze.getNodeTypeList().get(new Pair<>(2,0)).toString());
-    roomMaze.makeMove(Direction.SOUTH);
-    assertEquals(1, player.getArrowCount());
-  }
-//
-//  @Test
-//  public void testGetGoldCountOfPLayerAfterRobbedByThief() {
-//    roomMaze = new RoomMaze(2,5);
-//    Player player = roomMaze.getPlayer();
-//
-//    roomMaze.setStartingPoint(0,0);
-//    assertEquals(0, player.getGoldCount(),0.01);
-//
-//    assertEquals("GOLD",
-//            roomMaze.getNodeTypeList().get(new Pair<>(0,1)).toString());
-//    roomMaze.makeMove(Direction.EAST);
-//    assertEquals(1, player.getGoldCount(), 0.01);
-//
-//    assertEquals("BLANK",
-//            roomMaze.getNodeTypeList().get(new Pair<>(0,1)).toString());
-//    roomMaze.makeMove(Direction.EAST);
-//    assertEquals(1, player.getGoldCount(),0.01);
-//
-//    assertEquals("THIEF",
-//            roomMaze.getNodeTypeList().get(new Pair<>(0,3)).toString());
-//    roomMaze.makeMove(Direction.EAST);
-//    assertEquals(0.9, player.getGoldCount(),0.01);
-//  }
 
 
   @Test
-  public void test() {
-    AbstractMaze maze = new RoomMaze(4,4, 4, 1,
-            0,0, 1, 10, 10 , 3);
-    //EnumSet roomMaze.getPossibleMoves();
-//      maze.makeMove(Direction.NORTH);
-//      System.out.println(maze.getPlayer().getCurrentLocation());
-//    maze.visualize();
-    maze.shootArrow(Direction.NORTH, 1);
-    System.out.println(maze.getPlayer().getArrowCount());
+  public void testGetArrowCountOfPLayer() {
+    assertEquals(3, roomMaze.getPlayer().getArrowCount());
   }
+
+  @Test
+  public void testGetArrowCountOfPlayerDecreasesAfterShooting() {
+    roomMaze = new RoomMaze(4,4, 1, 0, 1,
+            0,2, 20, 10, 1 );
+    roomMaze.shootArrow(Direction.EAST,2);
+    assertEquals(0, roomMaze.getPlayer().getArrowCount());
+  }
+
+
 
   @Test
   public void testGetNumberOfPits() {
@@ -330,12 +278,136 @@ public class RoomMazeTest {
   }
 
   @Test
-  public void testMakeMoveToCaveWithBat() {
+  public void testMakeMoveToCaveWithBatTransportsToAnotherLocation() {
     roomMaze = new RoomMaze(4,4, 1, 0, 1,
             0,2, 20, 10, 3 );
     roomMaze.makeMove(Direction.SOUTH);
     assertEquals(new Pair<>(1, 1), roomMaze.getPlayer().getCurrentLocation());
   }
+
+  @Test
+  public void testMakeMoveToCaveWithBatDoesNotTransportToAnotherLocation() {
+    roomMaze = new RoomMaze(4,4, 1, 0, 1,
+            0,2, 20, 10, 3 );
+    roomMaze.makeMove(Direction.SOUTH);
+    assertEquals(new Pair<>(0, 2), roomMaze.getPlayer().getCurrentLocation());
+  }
+
+  @Test
+  public void testPlayerDiesInPit() {
+    roomMaze = new RoomMaze(4,4, 1, 1, 1,
+            0,2, 20, 10, 3 );
+    roomMaze.makeMove(Direction.EAST);
+    assertEquals(PlayerStatus.DEAD, roomMaze.getPlayer().getStatus());
+  }
+
+  @Test
+  public void testPlayerDiesIfEntersRoomWithWumpus() {
+    roomMaze = new RoomMaze(4,4, 1, 0, 1,
+            0,2, 20, 10, 3 );
+    roomMaze.makeMove(Direction.EAST);
+    assertEquals(PlayerStatus.DEAD, roomMaze.getPlayer().getStatus());
+  }
+
+  @Test
+  public void testPlayerDiesWhenArrowCountBecomesZero() {
+    roomMaze = new RoomMaze(4,4, 1, 0, 1,
+            0,2, 20, 10, 1 );
+    roomMaze.shootArrow(Direction.EAST, 2);
+    assertEquals(PlayerStatus.DEAD, roomMaze.getPlayer().getStatus());
+  }
+
+  @Test
+  public void testArrowPassesThroughTunnelWithoutBeingIncludedInTheDistance() {
+    roomMaze = new RoomMaze(4,4, 1, 1, 0,
+            0,1, 20, 10, 2);
+    roomMaze.shootArrow(Direction.NORTH, 1);
+    assertEquals(PlayerStatus.WINNER, roomMaze.getPlayer().getStatus());
+  }
+
+
+  @Test
+  public void testPlayerWinsByShootingWumpus() {
+    roomMaze = new RoomMaze(4,4, 1, 0, 1,
+            0,2, 20, 10, 3 );
+    roomMaze.shootArrow(Direction.EAST,1);
+    assertEquals(PlayerStatus.WINNER, roomMaze.getPlayer().getStatus());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testShootingarrowThrowsExceptionInvalidDistance() {
+    roomMaze = new RoomMaze(4,4, 1, 0, 1,
+            0,2, 20, 10, 3 );
+    roomMaze.shootArrow(Direction.EAST,-1);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testShootingarrowThrowsExceptionNoArrows() {
+    roomMaze = new RoomMaze(4,4, 1, 0, 1,
+            0,2, 20, 10, 1 );
+    roomMaze.shootArrow(Direction.EAST,2);
+    roomMaze.shootArrow(Direction.EAST,2);
+  }
+
+  @Test
+  public void testShootingarrowDoesNotKillWumpusIfDistanceNotExact() {
+    roomMaze = new RoomMaze(4,4, 1, 0, 1,
+            0,2, 20, 10, 5 );
+    roomMaze.shootArrow(Direction.EAST,2);
+    assertEquals(PlayerStatus.ALIVE, roomMaze.getPlayer().getStatus());
+  }
+
+  @Test
+  public void testFeelsDraftFromAdjacentPit() {
+    roomMaze = new RoomMaze(4,4, 1, 1, 0,
+            0,2, 20, 10, 5 );
+    assertEquals("You feel a draft ", roomMaze.makeMove(Direction.EAST));
+  }
+
+  @Test
+  public void testDoesNotFeelsDraftIfNoAdjacentPit() {
+    roomMaze = new RoomMaze(4,4, 1, 0, 1,
+            0,2, 20, 10, 5 );
+    assertEquals("", roomMaze.makeMove(Direction.WEST));
+  }
+
+  @Test
+  public void testSmellsWumpusFromAdjacentWumpus() {
+    roomMaze = new RoomMaze(4,4, 1, 1, 1,
+            0,2, 20, 10, 5 );
+    assertEquals("You smell a Wumpus! ", roomMaze.makeMove(Direction.NORTH));
+  }
+
+  @Test
+  public void testDoesNotSmellsWumpusIfNoAdjacentWumpus() {
+    roomMaze = new RoomMaze(4,4, 1, 3, 1,
+            0,2, 20, 10, 5 );
+    assertEquals("", roomMaze.makeMove(Direction.NORTH));
+  }
+
+  @Test
+  public void testArrowTravelsInStraightLineInCave() {
+    roomMaze = new RoomMaze(4,4, 1, 3, 1,
+            1,1, 20, 10, 5 );
+    assertEquals("Hee hee hee, you got the wumpus!\nNext time you won't be so lucky",
+            roomMaze.shootArrow(Direction.NORTH, 2));
+    assertEquals(PlayerStatus.WINNER, roomMaze.getPlayer().getStatus());
+  }
+
+  @Test
+  public void testArrowTravelsInCrookedMannerInTunnel() {
+    roomMaze = new RoomMaze(4,4, 1, 1,0,
+            0,1, 20, 10, 5 );
+    assertEquals("Hee hee hee, you got the wumpus!\nNext time you won't be so lucky",
+            roomMaze.shootArrow(Direction.NORTH, 1));
+    assertEquals(PlayerStatus.WINNER, roomMaze.getPlayer().getStatus());
+  }
+
+
+
+
+
+
 
 
 }

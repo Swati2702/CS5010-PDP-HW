@@ -9,6 +9,9 @@ import cipher.CipherImpl;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests for Cipher - encoding, decoding.
+ * */
 public class CipherTest {
 
   Cipher cipherWithEncodingProvided;
@@ -40,6 +43,14 @@ public class CipherTest {
     Map<Character, String> symbolCodeDictionary = new HashMap<>();
     symbolCodeDictionary.put('a', "z");
     symbolCodeDictionary.put('b', null);
+    cipherWithEncodingProvided = new CipherImpl(symbolCodeDictionary);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testCipherConstructorDisallowsNonPrefixEncodingForProvidedEncoding() {
+    Map<Character, String> symbolCodeDictionary = new HashMap<>();
+    symbolCodeDictionary.put('a', "z");
+    symbolCodeDictionary.put('b', "zp");
     cipherWithEncodingProvided = new CipherImpl(symbolCodeDictionary);
   }
 
@@ -94,7 +105,8 @@ public class CipherTest {
 
   @Test
   public void testGetCodingSchemeForProvidedEncoding() {
-    assertEquals("{a=z, b=y, c=x, d=w}", cipherWithEncodingProvided.getCodingScheme().toString());
+    assertEquals("{a=z, b=y, c=x, d=w}",
+            cipherWithEncodingProvided.getCodingScheme().toString());
   }
 
   @Test
@@ -104,6 +116,11 @@ public class CipherTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testEncodeMessageDisallowsIllegalMessageForProvidedEncoding() {
+    cipherWithEncodingProvided.encodeMessage("");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testEncodeMessageDisallowsIllegalMessageForProvidedEncoding2() {
     cipherWithEncodingProvided.encodeMessage("hkjsjdk");
   }
 
@@ -141,11 +158,11 @@ public class CipherTest {
   }
 
 
+
   @Test
   public void testEncodedMessageForGeneratedEncodingOctal() {
     cipherWithEncodingGenerated = new CipherImpl("SHE SELLS SEA SHELLS BY THE SEA "
-            +" SHORE",
-            "01234567");
+            + " SHORE","01234567");
     assertEquals("20013601303130",
             cipherWithEncodingGenerated.encodeMessage("SEE HE BOB"));
   }
@@ -154,7 +171,7 @@ public class CipherTest {
   @Test
   public void testDecodedMessageForGeneratedEncodingOctal() {
     cipherWithEncodingGenerated = new CipherImpl("SHE SELLS SEA SHELLS BY THE SEA "
-            +" SHORE",
+            + " SHORE",
             "01234567");
     assertEquals("SEE HE BOB",
             cipherWithEncodingGenerated.decodeMessage("20013601303130"));
@@ -163,7 +180,7 @@ public class CipherTest {
   @Test
   public void testEncodedMessageForGeneratedEncodingHexaDecimal() {
     cipherWithEncodingGenerated = new CipherImpl("SHE SELLS SEA SHELLS BY THE SEA "
-            +" SHORE",
+            + " SHORE",
             "0123456789abcdef");
     assertEquals("a889689010",
             cipherWithEncodingGenerated.encodeMessage("SEE HE BOB"));
@@ -173,10 +190,21 @@ public class CipherTest {
   @Test
   public void testDecodedMessageForGeneratedEncodingHexaDecimal() {
     cipherWithEncodingGenerated = new CipherImpl("SHE SELLS SEA SHELLS BY THE SEA "
-            +" SHORE",
+            + " SHORE",
             "0123456789abcdef");
     assertEquals("SEE HE BOB",
             cipherWithEncodingGenerated.decodeMessage("a889689010"));
   }
+  @Test
+  public void testPlainTextEncodingThenDecodingGivesBackPlainText() {
+    cipherWithEncodingGenerated = new CipherImpl("SHE SELLS SEA SHELLS BY THE SEA "
+            + " SHORE",
+            "0123456789abcdef");
+    String plaintext = "SEE HE BOB";
+    String encoded = cipherWithEncodingGenerated.encodeMessage(plaintext);
+    String decoded = cipherWithEncodingGenerated.decodeMessage(encoded);
+    assertEquals(plaintext, decoded);
+  }
+
 
 }

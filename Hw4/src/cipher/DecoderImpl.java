@@ -16,7 +16,7 @@ class DecoderImpl implements Decoder {
 
   private final Set<Character> symbols;
 
-    private final Map<Character, String> symbolCodeMap;
+  private final Map<Character, String> symbolCodeMap;
 
   DecoderImpl(String symbols) throws IllegalArgumentException {
     if (null == symbols || symbols.isBlank() || symbols.isEmpty()) {

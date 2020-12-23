@@ -155,8 +155,11 @@ public class CipherImpl implements Cipher {
   }
 
   @Override
-  public String encodeMessage(String message) {
+  public String encodeMessage(String message) throws IllegalArgumentException {
 
+    if (null == message || message.isBlank() || message.isEmpty()) {
+      throw new IllegalArgumentException("Invalid message.");
+    }
     StringBuilder encoding = new StringBuilder();
 
     for (int i = 0; i < message.length(); i++) {

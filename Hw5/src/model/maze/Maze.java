@@ -35,12 +35,6 @@ public interface Maze {
   int getNumberOfColumns();
 
   /**
-   * Tells if the maze is a wrapped maze or not.
-   * @return if maze is wrapped or not
-   * */
-  boolean isWrapped();
-
-  /**
    * Gets number of remaining walls in the maze.
    * @return  number of remaining walls in the maze.
    * */
@@ -93,7 +87,7 @@ public interface Maze {
    * @param direction : the direction in which the move is to be made
    * @throws IllegalArgumentException if cannot make move in given direction
    * */
-  void makeMove(Direction direction) throws IllegalArgumentException;
+  String makeMove(Direction direction) throws IllegalArgumentException;
 
   /**
    * Method to shoot an arrow in the given direction.
@@ -101,19 +95,17 @@ public interface Maze {
    * @param distance : the number of caves the arrow will traverse (limit 5)
    * @throws IllegalArgumentException if arrows exhausted or distance illegal
    * */
-  void shootArrow(Direction direction, int distance) throws IllegalArgumentException;
+  String shootArrow(Direction direction, int distance) throws IllegalArgumentException;
 
 
   /**
    * Method to visualize the maze.
    * */
-  void visualize();
+  String visualize();
 
   /**
    * Method to set seed for random maze generation.
    * */
   void setSeed(int seed);
-
-
 
 }

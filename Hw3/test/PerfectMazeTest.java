@@ -40,10 +40,10 @@ public class PerfectMazeTest {
 
   @Test
   public void testPerfectMazeGraphConstruction() {
-    assertEquals("AbstractMaze{numberOfRows=2, numberOfColumns=2, isWrapped=false, "
-            + "numberOfRemainingWalls=1, mazeGraph={Pair[0,0]=[Pair[1,0], Pair[0,1]], Pair[0,1]="
-            + "[Pair[0,0], Pair[1,1]], Pair[1,0]=[Pair[0,0]], Pair[1,1]=[Pair[0,1]]}, "
-            + "startingPoint=null, goalPoint=null}", perfectMaze.toString());
+    assertEquals("AbstractMaze{numberOfRows=2, numberOfColumns=2, isWrapped=false, \"\n" +
+            "            + \"numberOfRemainingWalls=1, mazeGraph={Pair[0,0]=[Pair[1,0], Pair[0,1]], Pair[0,1]=\"\n" +
+            "            + \"[Pair[0,0], Pair[1,1]], Pair[1,0]=[Pair[0,0]], Pair[1,1]=[Pair[0,1]]}, \"\n" +
+            "            + \"startingPoint=null, goalPoint=null}", perfectMaze.toString());
   }
 
 
